@@ -36,7 +36,7 @@ class Player(BaseModel):
         default=None,
         examples=["usuario@example.com"]
     )
-    
+
     birth_date: Optional[date] = Field(
         description="Fecha de nacimiento del jugador.",
         default=None,
