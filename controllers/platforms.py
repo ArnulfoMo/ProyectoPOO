@@ -16,7 +16,6 @@ async def get_one( id:int ) -> Platform:
         SELECT [id]
             ,[name]
             ,[release_date]
-            ,[type]
         FROM [gamehub].[platforms]
         WHERE [id] = ?
     """
@@ -43,7 +42,6 @@ async def get_all() -> list[Platform]:
         SELECT [id]
             ,[name]
             ,[release_date]
-            ,[type]
         FROM [gamehub].[platforms]
     """
 
@@ -60,14 +58,13 @@ async def get_all() -> list[Platform]:
 async def create_platform( platform: Platform ) -> Platform:
     
     createscript = """
-        INSERT INTO [gamehub].[platforms] ( [name] ,[release_date], [type]) 
-        VALUES ( ?, ?, ?);
+        INSERT INTO [gamehub].[platforms] ( [name] ,[release_date]) 
+        VALUES ( ?, ?);
     """
 
     params = (
         platform.name
         , platform.release_date
-        , platform.type
     )
 
     insert_result = None
@@ -81,7 +78,6 @@ async def create_platform( platform: Platform ) -> Platform:
         SELECT [id]
             ,[name]
             ,[release_date]
-            ,[type]
         FROM [gamehub].[platforms]
         WHERE [name] = ?
     """
@@ -128,7 +124,6 @@ async def update_platform( platform:Platform ) -> Platform:
         SELECT [id]
             ,[name]
             ,[release_date]
-            ,[type]
         FROM [gamehub].[platforms]
         WHERE [id] = ?
     """

@@ -20,10 +20,3 @@ class Platform(BaseModel):
         description="Fecha de lanzamiento de la plataforma.",
         examples=["2020-11-12", "2017-03-03"]
     )
-
-    type: Optional[str] = Field(
-        default=None,
-        description="Tipo de plataforma.",
-        pattern=r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$",
-        examples=["Console", "PC", "Handheld", "Mobile"]
-    )
