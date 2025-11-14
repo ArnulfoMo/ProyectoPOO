@@ -1,0 +1,39 @@
+######################################################################
+# Release helper (zsh/bash) — build, tag and push to ACR
+# - Staging build shows the "Staging" dashboards
+# - Production build hides "Staging" by default
+#
+# Before running, set VERSION if needed.
+######################################################################
+
+# --- Config ---
+VERSION=0.1.1
+ACR_PRD=devgamehubcr
+IMAGE_LOCAL=gamehub-api
+REPO_PROD=${ACR_PRD}.azurecr.io/gamehub-api
+
+
+########################################
+# 2) PRODUCTION: build locally and push
+########################################
+
+# Build PROD (staging hidden by default)
+docker buildx build \
+	--platform linux/amd64 \
+	-t ${IMAGE_LOCAL}:prod \
+	. --load
+
+# (Optional) Run locally
+docker rm -f gamehub-api 2>/dev/null || true
+docker run --env-file .env -p 8000:8000 -d --name gamehub-api ${IMAGE_LOCAL}:prod
+
+
+# Login to Azure & ACR
+az login
+az acr login --name ${ACR_PRD}
+
+# Tag & Push PROD
+docker tag ${IMAGE_LOCAL}:prod ${REPO_PROD}:${VERSION}
+docker tag ${IMAGE_LOCAL}:prod ${REPO_PROD}:latest
+docker push ${REPO_PROD}:${VERSION}
+docker push ${REPO_PROD}:latest
