@@ -39,7 +39,7 @@ async def get_one( id:int ) -> Game:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            return []
+            raise HTTPException(status_code=404, detail="Game not found")
 
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
@@ -120,7 +120,7 @@ async def create_game( game: Game ) -> Game:
             return []
 
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
+        raise HTTPException(status_code=500, detail=f"Database error { str(e) }")
 
 async def update_game( game:Game ) -> Game:
 
@@ -166,9 +166,9 @@ async def update_game( game:Game ) -> Game:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            return []
+            raise HTTPException(status_code=404, detail="Game not found")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database error: { str(e) }")
+        raise HTTPException(status_code=404, detail=f"Database error: { str(e) }")
 
 async def delete_game( id:int ) -> str:
 
@@ -317,7 +317,7 @@ async def add_platform( games_id: int, platforms_id:int ) -> PlayerGame:
         result = await execute_query_json(sqlfind, params=params)
         return json.loads(result)[0]
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
+        raise HTTPException(status_code=500, detail=f"Database error { str(e) }")
 
 
 async def update_platform_info(platform_data: GamePlatform) -> GamePlatform:
@@ -364,14 +364,14 @@ async def update_platform_info(platform_data: GamePlatform) -> GamePlatform:
         raise HTTPException(status_code=500, detail=f"Database error: { str(e) }")
 
 
-async def remove_platform( player_id:int, game_id:int ) -> str:
+async def remove_platform( games_id:int, platforms_id:int ) -> str:
 
     deletescript = """
         DELETE FROM [gamehub].[games_platforms]
         WHERE [games_id] = ? AND [platforms_id] = ?
     """
 
-    params = [player_id, game_id]
+    params = [games_id, platforms_id]
 
     try:
         await execute_query_json(deletescript, params=params, needs_commit=True)

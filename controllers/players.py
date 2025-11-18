@@ -43,7 +43,7 @@ async def get_one( id:int ) -> Player:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            return []
+            raise HTTPException(status_code=404, detail="Player not found")
 
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
@@ -116,7 +116,7 @@ async def create_player( player: Player ) -> Player:
             return []
 
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
+        raise HTTPException(status_code=500, detail=f"Database error { str(e) }")
 
 async def update_player( player:Player ) -> Player:
 
@@ -162,9 +162,9 @@ async def update_player( player:Player ) -> Player:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            return []
+            raise HTTPException(status_code=404, detail="Player not found")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database error: { str(e) }")
+        raise HTTPException(status_code=404, detail=f"Database error: { str(e) }")
 
 async def delete_player( id:int ) -> str:
 
@@ -282,7 +282,7 @@ async def add_game( player_id: int, game_id:int ) -> PlayerGame:
         result = await execute_query_json(sqlfind, params=params)
         return json.loads(result)[0]
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
+        raise HTTPException(status_code=500, detail=f"Database error { str(e) }")
 
 
 async def remove_game( player_id:int, game_id:int ) -> str:

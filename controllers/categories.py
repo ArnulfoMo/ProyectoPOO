@@ -34,7 +34,7 @@ async def get_one( id:int ) -> Category:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            return []
+            raise HTTPException(status_code=404, detail="Category not found")
 
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
@@ -98,7 +98,7 @@ async def create_category( category: Category ) -> Category:
             return []
 
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
+        raise HTTPException(status_code=500, detail=f"Database error { str(e) }")
 
 async def update_category( game:Category ) -> Category:
 
@@ -141,9 +141,9 @@ async def update_category( game:Category ) -> Category:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            return []
+            raise HTTPException(status_code=404, detail="Category not found")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database error: { str(e) }")
+        raise HTTPException(status_code=404, detail=f"Database error: { str(e) }")
 
 async def delete_category( id:int ) -> str:
 

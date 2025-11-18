@@ -35,7 +35,7 @@ async def get_one( id:int ) -> Platform:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            return []
+            raise HTTPException(status_code=404, detail="Platform not found")
 
     except Exception as e:
         raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
@@ -99,7 +99,7 @@ async def create_platform( platform: Platform ) -> Platform:
             return []
 
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Database error { str(e) }")
+        raise HTTPException(status_code=500, detail=f"Database error { str(e) }")
 
 async def update_platform( platform:Platform ) -> Platform:
 
@@ -142,9 +142,9 @@ async def update_platform( platform:Platform ) -> Platform:
         if len(result_dict) > 0:
             return result_dict[0]
         else:
-            return []
+            raise HTTPException(status_code=404, detail="Platform not found")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Database error: { str(e) }")
+        raise HTTPException(status_code=404, detail=f"Database error: { str(e) }")
 
 async def delete_platform( id:int ) -> str:
 
